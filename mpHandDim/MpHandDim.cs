@@ -10,12 +10,12 @@
 
     public class MpHandDim
     {
-        private const string LangItem = "mpHandDim";
-
         [CommandMethod("ModPlus", "MpHandDim", CommandFlags.UsePickSet | CommandFlags.Redraw)]
         public static void Main()
         {
+#if !DEBUG
             Statistic.SendCommandStarting(new ModPlusConnector());
+#endif
             try
             {
                 var doc = AcApp.DocumentManager.MdiActiveDocument;
@@ -25,7 +25,7 @@
                 // Выбираем размеры
                 var options = new PromptSelectionOptions
                 {
-                    MessageForAdding = "\n" + Language.GetItem(LangItem, "msg1"),
+                    MessageForAdding = $"\n{Language.GetItem("msg1")}",
                 };
                 var valueArray = new[] { new TypedValue(0, "Dimension") };
                 var filter = new SelectionFilter(valueArray);
@@ -36,9 +36,7 @@
                 }
 
                 // Задаем условие
-                var pko = new PromptKeywordOptions(
-                    Language.GetItem(LangItem, "msg2"),
-                    "Color Select Restore Delete")
+                var pko = new PromptKeywordOptions(Language.GetItem("msg2"), "Color Select Restore Delete")
                 {
                     AllowArbitraryInput = true,
                     AllowNone = true,
